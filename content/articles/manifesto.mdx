@@ -1,0 +1,73 @@
+---
+title: ZApps Manifesto
+description: Why we build zero-copy applications.
+---
+
+# ZApps Manifesto
+
+The current generation of cloud applications wastes byte cycles. Every
+RPC reformats. Every microservice re-marshals. Every authentication
+mints a JWT. Every encryption negotiates classical curves that a
+quantum computer will eventually crack.
+
+We can do better.
+
+## Three principles
+
+### 1. Don't copy what you don't have to
+
+Pointer + arena. Messages live in cache where Protobuf forces a heap
+round-trip. O(1) field access. No marshal/unmarshal allocations. The
+wire bytes ARE the in-memory representation; persisting to disk is
+`fwrite(message, len, 1, fd)`.
+
+### 2. Trust the wire
+
+Authentication belongs at the transport, not at the application. Every
+ZAP connection's identity is its long-term KEM keypair. No bearer
+tokens. No JWT mint storms. No rotation races. The cryptographic
+ceremony happens once, when the connection comes up; every subsequent
+RPC is free.
+
+### 3. Defend the future
+
+X-Wing and Z-Wing hybrid post-quantum from byte zero. Harvest-now-
+decrypt-later? Adversaries can log all the ciphertext they want; in
+2035 they'll have the ciphertext and no plaintext. The shift to PQ is
+free at the protocol layer — there's nothing to migrate later.
+
+## What ZApps replace
+
+| Old | New |
+|---|---|
+| HTTP/JSON RPC | zap-http |
+| WebSocket / SSE / HTTP/2 streams | zap-ws |
+| FIX-over-TLS | zap-fix |
+| DNS / mDNS / SPIFFE | zap-rns |
+| MCP-over-HTTP+SSE | zap-mcp |
+| FIPA-ACL / plain HTTP agent endpoints | zap-acp |
+| Google A2A over HTTP+JSON | zap-a2a |
+
+## What you get for free
+
+By the [composability theorem](https://github.com/zap-proto/papers/tree/main/composability),
+every sub-protocol that embeds onto ZAP-base inherits its
+post-quantum confidentiality and mutual authentication automatically.
+A FIX session running over ZAP-RNS-resolved peers over ZAP-base gets
+PQ confidentiality without a FIX-specific PQ analysis.
+
+The wire is the floor. Every protocol you stack on top inherits it.
+
+## Build a ZApp
+
+```bash
+go get github.com/zap-proto/http
+```
+
+```go
+import zaphttp "github.com/zap-proto/http"
+
+zaphttp.ListenAndServe(":9999", myHandler)
+```
+
+That's it.
