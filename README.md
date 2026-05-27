@@ -1,27 +1,25 @@
-# ZAP Protocol Documentation
+# zerocopy.app
 
-Official documentation site for ZAP - Zero-copy App Proto.
+Source for [zerocopy.app](https://zerocopy.app) — the "why zero-copy" landing page for ZAP. Single Next.js 15 marketing page; no docs (docs live at [zap-proto.dev](https://zap-proto.dev)).
 
-## Development
+## Develop
 
 ```bash
-# Install dependencies
 pnpm install
-
-# Start development server
-pnpm dev
-
-# Build for production
+pnpm dev          # http://localhost:3000
 pnpm build
 ```
 
-## Documentation
+## Deploy
 
-Documentation files are in `content/docs/` as MDX files.
+`do-sfo3-lux-k8s`, namespace `zerocopy-app`, served through `hanzoai/spa` behind `hanzoai/ingress`. Cloudflare proxy ON for edge cache + TLS.
 
-## Deployment
+Image: `ghcr.io/zap-proto/zerocopy:latest`. Companion domains share the same Service via the `zerocopy-app` Ingress: `zerocopy.app`, `www.zerocopy.app`, `zerocopy.pro`, `www.zerocopy.pro`, `zerocopy.tech`, `www.zerocopy.tech`.
 
-This site is deployed to GitHub Pages automatically on push to `main` via GitHub Actions.
+## Related
+
+- [zap-proto.io](https://zap-proto.io) — protocol marketing
+- [zap-proto.dev](https://zap-proto.dev) — developer portal + SDK docs
 
 ## License
 
